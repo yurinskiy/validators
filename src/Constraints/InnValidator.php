@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the RollerworksPasswordStrengthValidator package.
+ * This file is part of the YurinskiyValidators package.
  *
  * (c) Yuriy Yurinskiy <yuriyyurinskiy@yandex.ru>
  *
