@@ -63,7 +63,7 @@ class Inn extends Constraint
         ?array $groups = null,
         mixed $payload = null
     ) {
-        parent::__construct($options ?? [], $groups, $payload);
+        parent::__construct($options, $groups, $payload);
 
         $this->type = $type ?? $this->type;
 
