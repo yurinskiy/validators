@@ -13,7 +13,9 @@ namespace Yurinskiy\Validator\Tests\Constraints;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Validator\Mapping\Loader\AttributeLoader;
+use Symfony\Component\Validator\Mapping\Loader\LoaderInterface;
 use Yurinskiy\Validator\Constraints\Inn;
 
 /**
@@ -21,13 +23,11 @@ use Yurinskiy\Validator\Constraints\Inn;
  */
 final class InnTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function attributes(): void
+    public function testAttributes(): void
     {
         $metadata = new ClassMetadata(InnDummy::class);
-        $loader = new AttributeLoader();
+        $loader = $this->createAnnotationLoader();
+
         self::assertTrue($loader->loadClassMetadata($metadata));
 
         [$aConstraint] = $metadata->getPropertyMetadata('a')[0]->getConstraints();
@@ -48,6 +48,14 @@ final class InnTest extends TestCase
         self::assertSame(Inn::BUSINESSES, $cConstraint->type);
         self::assertSame(['my_group'], $cConstraint->groups);
         self::assertSame('some attached data', $cConstraint->payload);
+    }
+
+    protected function createAnnotationLoader(): LoaderInterface
+    {
+        // @phpstan-ignore-next-line
+        return class_exists(AttributeLoader::class)
+            ? new AttributeLoader()
+            : new AnnotationLoader();
     }
 }
 

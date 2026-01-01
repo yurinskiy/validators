@@ -20,6 +20,8 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
  *
  * @Annotation
  * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
+ *
+ * @author Yuriy Yurinskiy <yuriyyurinskiy@yandex.ru>
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class Inn extends Constraint
@@ -61,13 +63,13 @@ class Inn extends Constraint
         ?string $messageControlNumber = null,
         mixed $options = null,
         ?array $groups = null,
-        mixed $payload = null
+        mixed $payload = null,
     ) {
         parent::__construct($options, $groups, $payload);
 
         $this->type = $type ?? $this->type;
 
-        if ($this->type && ! \in_array($this->type, self::TYPES, true)) {
+        if ($this->type && !\in_array($this->type, self::TYPES, true)) {
             throw new ConstraintDefinitionException(\sprintf('The option "type" must be one of "%s".', implode('", "', self::TYPES)));
         }
 

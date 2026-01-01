@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.2",
     "symfony/validator": "^5.4|^6.0|^7.0|^8.0"
   },
   "require-dev": {

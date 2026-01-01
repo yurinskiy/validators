@@ -18,20 +18,22 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
  * @see https://ru.wikipedia.org/wiki/Идентификационный_номер_налогоплательщика#Вычисление_контрольных_цифр
+ *
+ * @author Yuriy Yurinskiy <yuriyyurinskiy@yandex.ru>
  */
 class InnValidator extends ConstraintValidator
 {
     public function validate(mixed $value, Constraint $constraint): void
     {
-        if (! $constraint instanceof Inn) {
+        if (!$constraint instanceof Inn) {
             throw new UnexpectedTypeException($constraint, Inn::class);
         }
 
-        if ($value === null || $value === '') {
+        if (null === $value || '' === $value) {
             return;
         }
 
-        if (! \is_scalar($value) && ! $value instanceof \Stringable) {
+        if (!\is_scalar($value) && !$value instanceof \Stringable) {
             throw new UnexpectedValueException($value, 'string');
         }
 
@@ -40,9 +42,9 @@ class InnValidator extends ConstraintValidator
 
         // the inn must be either 10 or 12 digits long
         if (
-            ! \in_array($length, [10, 12], true)
-            || ($constraint->type === Inn::INDIVIDUALS && $length !== 12)
-            || ($length !== 10)
+            !\in_array($length, [10, 12], true)
+            || (Inn::INDIVIDUALS === $constraint->type && 12 !== $length)
+            || (10 !== $length)
         ) {
             $this->context->buildViolation($constraint->messageLength)
                 ->setParameter('{{ value }}', $this->formatValue($value))
@@ -54,7 +56,7 @@ class InnValidator extends ConstraintValidator
         }
 
         // must contain digit values only
-        if (! ctype_digit($value)) {
+        if (!ctype_digit($value)) {
             $this->context->buildViolation($constraint->messageDigits)
                 ->setParameter('{{ value }}', $this->formatValue($value))
                 ->setCode(Inn::INVALID_DIGITS_ERROR)
@@ -65,7 +67,7 @@ class InnValidator extends ConstraintValidator
         }
 
         // must contain digit values only
-        if ($constraint->type === Inn::FOREIGN_ORGANIZATIONS && ! str_starts_with('9099', $value)) {
+        if (Inn::FOREIGN_ORGANIZATIONS === $constraint->type && !str_starts_with('9099', $value)) {
             $this->context->buildViolation($constraint->messageStructureForForeign)
                 ->setParameter('{{ value }}', $this->formatValue($value))
                 ->setCode(Inn::INVALID_STRUCTURE_FOR_FOREIGN_ORGANIZATIONS_ERROR)
@@ -76,7 +78,7 @@ class InnValidator extends ConstraintValidator
         }
 
         // must contain the correct control number
-        if (! self::checkControlNumber($value)) {
+        if (!self::checkControlNumber($value)) {
             $this->context->buildViolation($constraint->messageControlNumber)
                 ->setParameter('{{ value }}', $this->formatValue($value))
                 ->setCode(Inn::INVALID_CONTROL_NUMBER_ERROR)
@@ -89,7 +91,7 @@ class InnValidator extends ConstraintValidator
     {
         $length = mb_strlen($inn);
 
-        if (! \in_array($length, [10, 12], true)) {
+        if (!\in_array($length, [10, 12], true)) {
             return false;
         }
 
