@@ -47,5 +47,10 @@
     ],
     "phpstan": "./vendor/bin/phpstan analyse --memory-limit=512M",
     "test": "./vendor/bin/simple-phpunit"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
   }
 }
